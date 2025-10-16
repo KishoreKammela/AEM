@@ -49,33 +49,314 @@ pkill -9 java
 
 ## 📦 Maven Commands
 
-### Build Project (Without Deploy)
+### Basic Build Commands
+
+#### Build Project (Without Deploy)
 ```bash
 cd /Users/macbookprom1/Developer/adobe/micron
 mvn clean install
 ```
 
-### Build & Deploy to AEM
+#### Build & Deploy to AEM
 ```bash
 mvn clean install -PautoInstallPackage
 ```
 
-### Deploy with Custom Credentials
+#### Fast Build & Deploy (Skip Tests & Static Analysis)
+```bash
+mvn clean install -PautoInstallPackage -DskipTests -PskipStaticAnalysis
+```
+
+#### Build Only (No Install)
+```bash
+mvn clean compile
+```
+
+#### Clean Project
+```bash
+mvn clean
+```
+
+---
+
+### Deploy Commands
+
+#### Deploy All Packages
+```bash
+mvn clean install -PautoInstallPackage
+```
+
+#### Deploy ui.apps Module Only
+```bash
+mvn clean install -PautoInstallPackage -pl ui.apps
+```
+
+#### Deploy ui.content Module Only
+```bash
+mvn clean install -PautoInstallPackage -pl ui.content
+```
+
+#### Deploy Core Bundle Only
+```bash
+mvn clean install -PautoInstallBundle -pl core
+```
+
+#### Deploy to Author & Publish
+```bash
+mvn clean install -PautoInstallPackage,autoInstallPackagePublish
+```
+
+#### Deploy with Custom Credentials
 ```bash
 mvn clean install -PautoInstallPackage \
   -Dvault.user=admin \
   -Dvault.password=admin
 ```
 
-### Deploy Specific Module
+#### Deploy to Custom Port
 ```bash
-cd ui.apps
+mvn clean install -PautoInstallPackage \
+  -Daem.port=4502
+```
+
+---
+
+### Skip Options
+
+#### Skip Tests
+```bash
+mvn clean install -DskipTests
+```
+
+#### Skip Static Analysis (Checkstyle, PMD, SpotBugs)
+```bash
+mvn clean install -PskipStaticAnalysis
+```
+
+#### Skip Tests + Static Analysis
+```bash
+mvn clean install -DskipTests -PskipStaticAnalysis
+```
+
+#### Skip Integration Tests Only
+```bash
+mvn clean install -DskipITs
+```
+
+#### Skip Unit Tests Only
+```bash
+mvn clean install -Dtest=false
+```
+
+---
+
+### Update & Force Commands
+
+#### Force Update Dependencies
+```bash
+mvn clean install -U
+```
+
+#### Force Update & Deploy
+```bash
+mvn clean install -U -PautoInstallPackage
+```
+
+#### Offline Mode (Use Cached Dependencies)
+```bash
+mvn clean install -o
+```
+
+---
+
+### Specific Module Builds
+
+#### Build Specific Module
+```bash
+mvn clean install -pl ui.apps
+```
+
+#### Build Module & Its Dependencies
+```bash
+mvn clean install -pl ui.apps -am
+```
+
+#### Build Multiple Modules
+```bash
+mvn clean install -pl ui.apps,core
+```
+
+#### Skip Specific Module
+```bash
+mvn clean install -pl !ui.content
+```
+
+---
+
+### Testing Commands
+
+#### Run Tests Only
+```bash
+mvn test
+```
+
+#### Run Specific Test Class
+```bash
+mvn test -Dtest=MyTestClass
+```
+
+#### Run Specific Test Method
+```bash
+mvn test -Dtest=MyTestClass#myTestMethod
+```
+
+#### Run Integration Tests
+```bash
+mvn verify
+```
+
+#### Debug Tests
+```bash
+mvn test -Dmaven.surefire.debug
+```
+
+---
+
+### Package Management
+
+#### Create Package (No Install to AEM)
+```bash
+mvn clean package
+```
+
+#### Create & Install Package Locally
+```bash
 mvn clean install -PautoInstallPackage
 ```
 
-### Skip Tests
+#### Build Package with Dependencies
 ```bash
-mvn clean install -DskipTests
+mvn clean package -PautoInstallPackage
+```
+
+---
+
+### Production & Environment Specific
+
+#### Production Build (All Checks)
+```bash
+mvn clean install
+```
+
+#### Development Build (Fast)
+```bash
+mvn clean install -PautoInstallPackage -DskipTests -PskipStaticAnalysis
+```
+
+#### Deploy to Local Author
+```bash
+mvn clean install -PautoInstallPackage -Daem.host=localhost -Daem.port=4502
+```
+
+#### Deploy to Local Publish
+```bash
+mvn clean install -PautoInstallPackagePublish -Daem.host=localhost -Daem.port=4503
+```
+
+#### Deploy to Remote Server
+```bash
+mvn clean install -PautoInstallPackage \
+  -Daem.host=dev-author.example.com \
+  -Daem.port=4502 \
+  -Dvault.user=admin \
+  -Dvault.password=admin
+```
+
+---
+
+### Advanced Maven Commands
+
+#### Show Dependency Tree
+```bash
+mvn dependency:tree
+```
+
+#### Check for Dependency Updates
+```bash
+mvn versions:display-dependency-updates
+```
+
+#### Check for Plugin Updates
+```bash
+mvn versions:display-plugin-updates
+```
+
+#### Analyze Dependencies
+```bash
+mvn dependency:analyze
+```
+
+#### Show Effective POM
+```bash
+mvn help:effective-pom
+```
+
+#### List Available Profiles
+```bash
+mvn help:all-profiles
+```
+
+#### Show Active Profiles
+```bash
+mvn help:active-profiles
+```
+
+---
+
+### Debug & Verbose Commands
+
+#### Verbose Output
+```bash
+mvn clean install -X
+```
+
+#### Debug Build Issues
+```bash
+mvn clean install -X -e
+```
+
+#### Show Version Info
+```bash
+mvn --version
+```
+
+---
+
+### Common Combinations
+
+#### Fast Deploy (Most Common for Development)
+```bash
+mvn clean install -PautoInstallPackage -DskipTests -PskipStaticAnalysis
+```
+
+#### Full Build & Deploy (Pre-Commit)
+```bash
+mvn clean install -PautoInstallPackage
+```
+
+#### Quick Module Deploy
+```bash
+mvn clean install -PautoInstallPackage -pl ui.apps -DskipTests
+```
+
+#### Production-Ready Build
+```bash
+mvn clean install -Dmaven.test.skip=false
+```
+
+#### Deploy Everything Fresh
+```bash
+mvn clean install -U -PautoInstallPackage -DskipTests
 ```
 
 ---
